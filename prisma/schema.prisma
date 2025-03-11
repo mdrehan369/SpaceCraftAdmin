@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Design {
+  id                     Int                      @id @unique @default(autoincrement())
+  Category               String
+  title                  String
+  imageUrl               String
+  createdAt              DateTime                 @default(now())
+  FreeDesignConsultation FreeDesignConsultation[]
+}
+
+model FreeDesignConsultation {
+  id                 Int      @id @unique @default(autoincrement())
+  property           Property
+  city               City
+  name               String
+  phoneNumber        String
+  isConsultationDone Boolean  @default(false)
+  whatsappUpdates    Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  designId           Int
+  Design             Design   @relation(fields: [designId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id          Int      @id @unique @default(autoincrement())
+  title       String
+  slug        String
+  address     String
+  workDetails String
+  customers   String[]
+  imageUrls   String[]
+}
+
+model Review {
+  id      Int    @id @unique @default(autoincrement())
+  name    String
+  address String
+  review  String
+}
+
+enum City {
+  BOKARO
+  DEOGHAR
+  DHANBAD
+  EAST_SINGHBHUM
+  GIRIDIH
+  HAZARIBAGH
+  KODARMA
+  RAMGARH
+  RANCHI
+  SARAIKELA
+  WEST_SINGHBHUM
+  OTHERS
+}
+
+enum Property {
+  ONE_BHK
+  TWO_BHK
+  THREE_BHK
+  FOUR_BHK_OR_DUPLEX
+}
