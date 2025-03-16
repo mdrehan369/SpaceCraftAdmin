@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { CustomToast } from "../CustomToast";
 
 export default function DesignForm() {
     const form = useForm<z.infer<typeof addDesignSchema>>({
@@ -35,23 +36,9 @@ export default function DesignForm() {
         const response = await addNewDesign(data);
         if (response.success) {
             router.push("/designs");
-            toast("Design added successfully!", {
-                style: {
-                    backgroundColor: "#ffd6a7",
-                    borderColor: "transparent",
-                },
-                richColors: true,
-                description: "Public can see this design now!",
-            });
+            CustomToast({ title: "Design added successfully!", description: "Public can see this design now!" })
         } else {
-            toast("Sorry some error occured!", {
-                style: {
-                    backgroundColor: "#ff5959",
-                    borderColor: "transparent",
-                },
-                richColors: true,
-                description: "Please try again later!",
-            });
+            CustomToast({ title: "Sorry some error occured!", description: "Please try again later!", variant: "Danger" })
         }
     };
 

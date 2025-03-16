@@ -1,6 +1,8 @@
 "use client";
 
 import Button from "@/components/Button";
+import { CustomToast } from "@/components/CustomToast";
+import DeleteButton from "@/components/DeleteButton";
 import Loader from "@/components/Loader";
 import CustomPagination from "@/components/Pagination";
 import PerPage from "@/components/PerPage";
@@ -9,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Categories } from "@/constants";
 import useQuery, { ParamType } from "@/hooks/useQuery";
+import axiosInstance from "@/utils/axiosInstance";
 import { Design } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,9 +19,9 @@ import { useState } from "react";
 
 export default function Designs() {
     const [category, setCategory] = useState<string[]>([]);
-    const router = useRouter()
+    const router = useRouter();
 
-    const { data, loading, page, limit, setParams, search } = useQuery<Design>({
+    const { data, loading, page, limit, setParams, search, refetch } = useQuery<Design>({
         api: "/designs",
         params: { category: category.join(",") },
     });
@@ -29,26 +32,65 @@ export default function Designs() {
                     Designs
                 </h2>
                 <div className='flex items-center justify-between px-3'>
-                    <SearchBox search={search} setSearch={(val) => setParams({ type: ParamType.SEARCH, value: val })} />
-                    <Button onClick={() => router.push('/designs/add')} className="justify-self-start mr-auto ml-3">Add Design</Button>
-                    <PerPage limit={limit} setLimit={(val) => setParams({ type: ParamType.LIMIT, value: val })} />
+                    <SearchBox
+                        search={search}
+                        setSearch={(val) =>
+                            setParams({ type: ParamType.SEARCH, value: val })
+                        }
+                    />
+                    <Button
+                        onClick={() => router.push("/designs/add")}
+                        className='justify-self-start mr-auto ml-3'
+                    >
+                        Add Design
+                    </Button>
+                    <PerPage
+                        limit={limit}
+                        setLimit={(val) =>
+                            setParams({ type: ParamType.LIMIT, value: val })
+                        }
+                    />
                 </div>
-                <div className="flex flex-wrap items-center justify-start gap-6 px-4">
-                    {
-                        Categories.map(ctg => <div key={ctg} className="flex gap-2">
-                            <Checkbox id={ctg} className="cursor-pointer" onCheckedChange={(e) => {
-                                if(e.valueOf()) {
-                                    setCategory([...category, ctg])
-                                    setParams({ type: ParamType.OTHER_PARAMS, value: { category: [...category, ctg].join(',') } })
-                                }
-                                else {
-                                    setParams({ type: ParamType.OTHER_PARAMS, value: { category: category.filter(val => val !== ctg).join(',') } })
-                                    setCategory(prev => prev.filter(val => val !== ctg))
-                                }
-                            }} />
-                            <Label htmlFor={ctg} className="cursor-pointer">{ctg}</Label>
-                        </div>)
-                    }
+                <div className='flex flex-wrap items-center justify-start gap-6 px-4'>
+                    {Categories.map((ctg) => (
+                        <div key={ctg} className='flex gap-2'>
+                            <Checkbox
+                                id={ctg}
+                                className='cursor-pointer'
+                                onCheckedChange={(e) => {
+                                    if (e.valueOf()) {
+                                        setCategory([...category, ctg]);
+                                        setParams({
+                                            type: ParamType.OTHER_PARAMS,
+                                            value: {
+                                                category: [
+                                                    ...category,
+                                                    ctg,
+                                                ].join(","),
+                                            },
+                                        });
+                                    } else {
+                                        setParams({
+                                            type: ParamType.OTHER_PARAMS,
+                                            value: {
+                                                category: category
+                                                    .filter(
+                                                        (val) => val !== ctg
+                                                    )
+                                                    .join(","),
+                                            },
+                                        });
+                                        setCategory((prev) =>
+                                            prev.filter((val) => val !== ctg)
+                                        );
+                                    }
+                                }}
+                            />
+                            <Label htmlFor={ctg} className='cursor-pointer'>
+                                {ctg}
+                            </Label>
+                        </div>
+                    ))}
                 </div>
             </div>
             {!loading ? (
@@ -57,8 +99,24 @@ export default function Designs() {
                         {data.map((dsgn) => (
                             <div
                                 key={dsgn.id}
-                                className='border-0 w-[35vw] h-[60vh] rounded hover:bg-gray-100 p-4 cursor-pointer transition-colors'
+                                className='border-0 w-[35vw] min-h-[60vh] rounded hover:bg-gray-100 p-4 cursor-pointer transition-colors relative group'
                             >
+                                <DeleteButton
+                                    title='Delete Design'
+                                    description='Are you sure you want to delete this design'
+                                    handler={async (id) => {
+                                        try {
+                                            await axiosInstance.delete(`/designs/${id}`)
+                                            CustomToast({ title: "Design deleted successfully!" })
+                                            refetch()
+                                        } catch (error) {
+                                            console.log(error)
+                                            CustomToast({ title: "Sorry some error occured while deleting!", variant: "Danger" })
+                                        }
+                                    }}
+                                    id={dsgn.id}
+                                />
+
                                 <Image
                                     alt={dsgn.title}
                                     src={dsgn.imageUrl}

@@ -44,6 +44,7 @@ model Review {
   name    String
   address String
   review  String
+  rating  Int @default(4)
 }
 
 enum City {

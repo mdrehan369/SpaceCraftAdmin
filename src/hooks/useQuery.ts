@@ -59,15 +59,18 @@ export default function useQuery<DataType>({
         }
     };
 
+    const fetchData = async () => {
+        setLoading(true);
+        const { data, status } = await axios.get(`http://localhost:3000/api/v1/${api}`, { params: { page, limit, sort, search, ...otherParams } })
+        if (status && data.success) setData(data.data);
+        setLoading(false);
+    }
+
+    const refetch = () => fetchData()
+
     useEffect(() => {
-        (async () => {
-            setLoading(true);
-            const { data, status } = await axios.get(`http://localhost:3000/api/v1/${api}`, { params: { page, limit, sort, search, ...otherParams } })
-            if (status && data.success) setData(data.data);
-            setLoading(false);
-        })();
-        console.log(otherParams)
+        fetchData()
     }, [page, limit, sort, search, otherParams]);
 
-    return { page, limit, sort, data, loading, search, setParams };
+    return { page, limit, sort, data, loading, search, setParams, refetch };
 }
