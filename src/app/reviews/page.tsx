@@ -19,6 +19,17 @@ export default function ReviewPage() {
         params: {},
     });
     const router = useRouter();
+
+    const handleDelete = async (id: number) => {
+        try {
+            await axiosInstance.delete(`/reviews/${id}`)
+            CustomToast({ title: "Review deleted successfully!" })
+            refetch()
+        } catch (error) {
+            console.log(error)
+            CustomToast({ title: "Sorry some error occured while deleting!", variant: "Danger" })
+        }
+    }
     return (
         <div className='p-8'>
             <div className='space-y-3 mb-3'>
@@ -57,16 +68,7 @@ export default function ReviewPage() {
                                 <DeleteButton
                                     title='Delete Review'
                                     description='Are you sure you want to delete this design'
-                                    handler={async (id) => {
-                                        try {
-                                            await axiosInstance.delete(`/reviews/${id}`)
-                                            CustomToast({ title: "Review deleted successfully!" })
-                                            refetch()
-                                        } catch (error) {
-                                            console.log(error)
-                                            CustomToast({ title: "Sorry some error occured while deleting!", variant: "Danger" })
-                                        }
-                                    }}
+                                    handler={handleDelete}
                                     id={review.id}
                                 />
 

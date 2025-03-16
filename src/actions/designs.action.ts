@@ -1,9 +1,7 @@
 "use server";
 
 import { prismaClient } from "@/utils/prismaClient";
-import { Prisma } from "@prisma/client";
-import { v2, UploadApiErrorResponse } from "cloudinary";
-import path from "path";
+import { v2 } from "cloudinary";
 
 v2.config({
     cloud_name: "dumndb22c",
@@ -38,7 +36,7 @@ export async function fetchAllDesigns() {
             category: string;
             items: Array<{ id: number; title: string; imageUrl: string }>;
         }> = [];
-        for (let category of categories) {
+        for (const category of categories) {
             const response = await prismaClient.design.findMany({
                 where: { Category: category.Category },
                 select: { id: true, imageUrl: true, title: true },
@@ -88,7 +86,7 @@ export const addNewDesign = async (data: {
                             return;
                         }
                         console.log(result);
-                        resolve(result?.secure_url!);
+                        resolve(result && result.secure_url! || null);
                     }
                 )
                 .end(buffer);

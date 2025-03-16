@@ -21,7 +21,7 @@ import { addNewReview } from "@/actions/reviews.actions";
 import { Star } from "lucide-react";
 import { CustomToast } from "../CustomToast";
 
-export default function ReviewForm() {
+export default function ProjectForm() {
     const form = useForm<z.infer<typeof addReviewSchema>>({
         resolver: zodResolver(addReviewSchema),
         defaultValues: {

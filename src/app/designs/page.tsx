@@ -25,6 +25,18 @@ export default function Designs() {
         api: "/designs",
         params: { category: category.join(",") },
     });
+
+    const handleDelete = async (id: number) => {
+        try {
+            await axiosInstance.delete(`/designs/${id}`)
+            CustomToast({ title: "Design deleted successfully!" })
+            refetch()
+        } catch (error) {
+            console.log(error)
+            CustomToast({ title: "Sorry some error occured while deleting!", variant: "Danger" })
+        }
+    }
+
     return (
         <div className='p-8'>
             <div className='space-y-3 mb-3'>
@@ -104,16 +116,7 @@ export default function Designs() {
                                 <DeleteButton
                                     title='Delete Design'
                                     description='Are you sure you want to delete this design'
-                                    handler={async (id) => {
-                                        try {
-                                            await axiosInstance.delete(`/designs/${id}`)
-                                            CustomToast({ title: "Design deleted successfully!" })
-                                            refetch()
-                                        } catch (error) {
-                                            console.log(error)
-                                            CustomToast({ title: "Sorry some error occured while deleting!", variant: "Danger" })
-                                        }
-                                    }}
+                                    handler={handleDelete}
                                     id={dsgn.id}
                                 />
 
