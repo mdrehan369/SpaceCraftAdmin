@@ -49,7 +49,7 @@ export default function useQuery<DataType>({
         }
 
         if (type === ParamType.OTHER_PARAMS) {
-            setOtherParams(value as Record<string, string>);
+            setOtherParams({...otherParams, ...(value as Record<string, any>)});
         }
         const numValue = Number(value);
 

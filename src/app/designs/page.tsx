@@ -2,7 +2,7 @@
 
 import Button from "@/components/Button";
 import { CustomToast } from "@/components/CustomToast";
-import DeleteButton from "@/components/DeleteButton";
+import DesignCard from "@/components/DesignCard";
 import Loader from "@/components/Loader";
 import CustomPagination from "@/components/Pagination";
 import PerPage from "@/components/PerPage";
@@ -13,7 +13,6 @@ import { Categories } from "@/constants";
 import useQuery, { ParamType } from "@/hooks/useQuery";
 import axiosInstance from "@/utils/axiosInstance";
 import { Design } from "@prisma/client";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -21,21 +20,25 @@ export default function Designs() {
     const [category, setCategory] = useState<string[]>([]);
     const router = useRouter();
 
-    const { data, loading, page, limit, setParams, search, refetch } = useQuery<Design>({
-        api: "/designs",
-        params: { category: category.join(",") },
-    });
+    const { data, loading, page, limit, setParams, search, refetch } =
+        useQuery<Design>({
+            api: "/designs",
+            params: { category: category.join(",") },
+        });
 
     const handleDelete = async (id: number) => {
         try {
-            await axiosInstance.delete(`/designs/${id}`)
-            CustomToast({ title: "Design deleted successfully!" })
-            refetch()
+            await axiosInstance.delete(`/designs/${id}`);
+            CustomToast({ title: "Design deleted successfully!" });
+            refetch();
         } catch (error) {
-            console.log(error)
-            CustomToast({ title: "Sorry some error occured while deleting!", variant: "Danger" })
+            console.log(error);
+            CustomToast({
+                title: "Sorry some error occured while deleting!",
+                variant: "Danger",
+            });
         }
-    }
+    };
 
     return (
         <div className='p-8'>
@@ -109,35 +112,11 @@ export default function Designs() {
                 <>
                     <div className='w-full h-full grid grid-cols-2 justify-items-center gap-3 justify-center'>
                         {data.map((dsgn) => (
-                            <div
+                            <DesignCard
+                                dsgn={dsgn}
+                                handleDelete={handleDelete}
                                 key={dsgn.id}
-                                className='border-0 w-[35vw] min-h-[60vh] rounded hover:bg-gray-100 p-4 cursor-pointer transition-colors relative group'
-                            >
-                                <DeleteButton
-                                    title='Delete Design'
-                                    description='Are you sure you want to delete this design'
-                                    handler={handleDelete}
-                                    id={dsgn.id}
-                                />
-
-                                <Image
-                                    alt={dsgn.title}
-                                    src={dsgn.imageUrl}
-                                    width={200}
-                                    height={200}
-                                    className='w-full h-[50vh] object-cover'
-                                />
-                                <div className='flex items-center justify-between mt-2'>
-                                    <span className='w-[80%] text-gray-600 h-fit text-sm font-medium'>
-                                        {dsgn.title
-                                            .replaceAll("-", " ")
-                                            .toLocaleUpperCase()}
-                                    </span>
-                                    <span className='w-fit p-2 text-orange-500 bg-orange-200 rounded-3xl text-center text-xs uppercase font-medium'>
-                                        {dsgn.Category}
-                                    </span>
-                                </div>
-                            </div>
+                            />
                         ))}
                     </div>
                     <CustomPagination
