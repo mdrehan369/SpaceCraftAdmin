@@ -74,7 +74,7 @@ export default function DesignForm() {
                                 <RadioGroup
                                     onValueChange={field.onChange}
                                     defaultValue={field.value}
-                                    className='flex flex-col space-y-1'
+                                    className='grid grid-cols-2 space-y-1'
                                 >
                                     {Categories.map((category) => (
                                         <FormItem

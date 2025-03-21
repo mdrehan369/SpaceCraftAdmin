@@ -10,7 +10,7 @@ datasource db {
 model Design {
   id                     Int                      @id @unique @default(autoincrement())
   Category               String
-  title                  String
+  title                  String                   @unique
   imageUrl               String
   createdAt              DateTime                 @default(now())
   FreeDesignConsultation FreeDesignConsultation[]
@@ -44,7 +44,22 @@ model Review {
   name    String
   address String
   review  String
-  rating  Int @default(4)
+  rating  Int    @default(4)
+}
+
+model Guide {
+  id           Int            @id @unique @default(autoincrement())
+  title        String
+  description  String
+  GuideContent GuideContent[]
+}
+
+model GuideContent {
+  id      Int    @id @unique @default(autoincrement())
+  heading String
+  value   String
+  guideId Int
+  Guide   Guide  @relation(fields: [guideId], references: [id], onDelete: Cascade)
 }
 
 enum City {

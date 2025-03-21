@@ -39,7 +39,10 @@ export const Categories = [
     'Kids Bedroom',
     '1BHK',
     '2BHK',
-    'Home Office'
+    'Home Office',
+    'Display Area',
+    'Workstation Area',
+    'Cabin Area',
 ] as const
 
 export const Properties = [
