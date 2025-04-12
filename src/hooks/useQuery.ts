@@ -68,7 +68,7 @@ export default function useQuery<DataType>({
     const fetchData = async () => {
         setLoading(true);
         const { data, status } = await axios.get(
-            `http://localhost:3000/api/v1/${api}`,
+            `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/${api}`,
             { params: { page, limit, sort, search, ...otherParams } }
         );
         if (status && data.success) setData(data.data);
