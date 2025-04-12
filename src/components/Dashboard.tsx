@@ -33,7 +33,7 @@ export default function Dashboard({
     visitsPerCity,
     visitsPerDesign,
     visitsPerMonth,
-    visitsThisMonth
+    visitsThisMonth,
 }: {
     visitsPerCity: Array<{ _count: number; city: string }>;
     visitsPerDesign: Array<{ _count: number; design: string }>;
@@ -42,12 +42,11 @@ export default function Dashboard({
 }) {
     return (
         <div className='w-full grid grid-cols-2 gap-3 p-8'>
-
-<div className='bg-gray-100 p-4 rounded-md transition-colors'>
+            <div className='bg-gray-100 p-4 rounded-md transition-colors'>
                 <h2 className='text-sm text-gray-800 font-semibold uppercase'>
                     Visits Per Month
                 </h2>
-                <ChartContainer config={chartConfig}>
+                <ChartContainer config={chartConfig} className="min-h-[200px]">
                     <AreaChart
                         accessibilityLayer
                         data={visitsPerMonth}
@@ -84,7 +83,10 @@ export default function Dashboard({
                 <h2 className='text-sm text-gray-800 font-semibold uppercase'>
                     Visits Per Design
                 </h2>
-                <ChartContainer config={chartConfig} className='h-full w-full p-4'>
+                <ChartContainer
+                    config={chartConfig}
+                    className='h-full w-full p-4 min-h-[200px]'
+                >
                     <BarChart
                         accessibilityLayer
                         data={visitsPerDesign}
@@ -114,7 +116,7 @@ export default function Dashboard({
                 <h2 className='text-sm text-gray-800 font-semibold uppercase'>
                     Visits This Month
                 </h2>
-                <ChartContainer config={chartConfig}>
+                <ChartContainer config={chartConfig} className="min-h-[200px]">
                     <AreaChart
                         accessibilityLayer
                         data={visitsThisMonth}
@@ -152,7 +154,7 @@ export default function Dashboard({
                 </h2>
                 <ChartContainer
                     config={chartConfig}
-                    className='h-full w-full p-4'
+                    className='h-full w-full p-4 min-h-[200px]'
                     title='Visits Per City'
                 >
                     <BarChart
@@ -179,8 +181,6 @@ export default function Dashboard({
                     </BarChart>
                 </ChartContainer>
             </div>
-
-
         </div>
     );
 }
