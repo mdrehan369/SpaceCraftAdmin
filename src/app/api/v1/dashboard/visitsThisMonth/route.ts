@@ -5,15 +5,15 @@ import { NextResponse } from "next/server";
 export const GET = async (req: NextRequest) => {
     try {
         const currTime = new Date();
-        let nineMonthAgo = new Date();
-        nineMonthAgo.setMonth(currTime.getMonth() - 9);
+        let oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(currTime.getMonth() - 1);
 
         const visitsPerMonth = await prismaClient.$queryRaw`
-            SELECT DATE_TRUNC('month', "createdAt") AS month, COUNT(*) AS count
+            SELECT DATE_TRUNC('day', "createdAt") AS date, COUNT(*) AS count
             FROM "Session"
-            WHERE "createdAt" > ${nineMonthAgo}
-            GROUP BY month
-            ORDER BY month DESC;
+            WHERE "createdAt" > ${oneMonthAgo}
+            GROUP BY date
+            ORDER BY date DESC;
             `;
 
         const stringifiedData = JSON.stringify(visitsPerMonth, (_, v) =>
@@ -21,7 +21,7 @@ export const GET = async (req: NextRequest) => {
         );
 
         return NextResponse.json(
-            { message: "Success", data: { visitsPerMonth: stringifiedData } },
+            { message: "Success", data: { visitsThisMonth: stringifiedData } },
             { status: 200 }
         );
     } catch (error) {
