@@ -1,11 +1,10 @@
 import { prismaClient } from "@/utils/prismaClient"
-import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 
-export const GET = async (req: NextRequest) => {
+export const GET = async () => {
     try {
         const currTime = new Date()
-        let sixMonthAgo = new Date()
+        const sixMonthAgo = new Date()
         sixMonthAgo.setMonth(currTime.getMonth() - 6)
 
         const visitsPerDesign = await prismaClient.designCategory.groupBy({

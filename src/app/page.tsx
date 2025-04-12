@@ -16,9 +16,9 @@ export default async function Home() {
     const visitsPerDesign: Array<{ _count: number; design: string }> =
         (await apiHelper("/dashboard/visitsPerDesign"))?.visitsPerDesign || [];
     const visitsPerMonth: Array<{ count: number; month: string }> =
-        JSON.parse((await apiHelper("/dashboard/visits"))?.visitsPerMonth) || [];
+        JSON.parse((await apiHelper("/dashboard/visits"))?.visitsPerMonth || '[]') || [];
     const visitsThisMonth: Array<{ count: number; date: string }> =
-        JSON.parse((await apiHelper("/dashboard/visitsThisMonth"))?.visitsThisMonth) || [];
+        JSON.parse((await apiHelper("/dashboard/visitsThisMonth"))?.visitsThisMonth || '[]') || [];
 
     return (
         <Dashboard

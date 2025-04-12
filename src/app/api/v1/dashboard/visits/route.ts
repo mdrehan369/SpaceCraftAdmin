@@ -1,11 +1,10 @@
 import { prismaClient } from "@/utils/prismaClient";
-import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-export const GET = async (req: NextRequest) => {
+export const GET = async () => {
     try {
         const currTime = new Date();
-        let nineMonthAgo = new Date();
+        const nineMonthAgo = new Date();
         nineMonthAgo.setMonth(currTime.getMonth() - 9);
 
         const visitsPerMonth = await prismaClient.$queryRaw`
