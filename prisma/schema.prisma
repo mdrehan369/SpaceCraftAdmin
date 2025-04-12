@@ -62,6 +62,23 @@ model GuideContent {
   Guide   Guide  @relation(fields: [guideId], references: [id], onDelete: Cascade)
 }
 
+model DesignCategory {
+  sessionId Int
+  design    String
+  id        Int     @id @unique @default(autoincrement())
+  Session   Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+}
+
+model Session {
+  id             Int              @id @unique @default(autoincrement())
+  city           String
+  latitude       String
+  longitude      String
+  createdAt      DateTime         @default(now())
+  token          String           @unique
+  DesignCategory DesignCategory[]
+}
+
 enum City {
   BOKARO
   DEOGHAR
