@@ -11,6 +11,7 @@ const apiHelper = async (endpoint: string) => {
 };
 
 export default async function Home() {
+
     const visitsPerCity: Array<{ _count: number; city: string }> =
         (await apiHelper("/dashboard/cities"))?.visitsPerCity || [];
     const visitsPerDesign: Array<{ _count: number; design: string }> =

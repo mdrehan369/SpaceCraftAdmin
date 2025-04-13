@@ -100,3 +100,9 @@ enum Property {
   THREE_BHK
   FOUR_BHK_OR_DUPLEX
 }
+
+model AdminSession {
+  id        Int      @id @unique @default(autoincrement())
+  token     String   @default(cuid())
+  createdAt DateTime @default(now())
+}
